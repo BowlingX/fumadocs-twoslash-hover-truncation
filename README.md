@@ -27,7 +27,7 @@ the same commands.
 
 | `/docs/fields` (4 lines of code) | `twoslash-v3` (3.3.1) | `main` (4.0.1) |
 | -------------------------------- | --------------------- | -------------- |
-| `fields` hover text              | 627 chars             | 6,768 chars    |
+| `fields` hover text              | 626 chars             | 6,715 chars    |
 | Page HTML                        | 131 KB                | 609 KB         |
 | Page RSC payload                 | 90 KB                 | 493 KB         |
 
