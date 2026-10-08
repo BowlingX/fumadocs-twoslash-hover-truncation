@@ -1,0 +1,65 @@
+---
+title: Fields
+description: Hover popups of a value with a large object type
+---
+
+`fields` (hidden above the cut) has 30 members. Hover `fields` in the code below.
+
+```ts twoslash
+// @filename: fields.ts
+export interface FieldOptions {
+  label?: string;
+  description?: string;
+  placeholder?: string;
+  required?: boolean;
+  disabled?: boolean;
+}
+
+export interface ValidationOptions {
+  message?: string;
+  pattern?: RegExp;
+  min?: number;
+  max?: number;
+}
+
+/** A form field builder with one factory per field kind. */
+export const fields = {
+  text: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'text' as const, options, validation }),
+  textarea: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'textarea' as const, options, validation }),
+  email: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'email' as const, options, validation }),
+  url: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'url' as const, options, validation }),
+  password: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'password' as const, options, validation }),
+  number: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'number' as const, options, validation }),
+  integer: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'integer' as const, options, validation }),
+  slider: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'slider' as const, options, validation }),
+  checkbox: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'checkbox' as const, options, validation }),
+  toggle: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'toggle' as const, options, validation }),
+  select: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'select' as const, options, validation }),
+  multiSelect: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'multiSelect' as const, options, validation }),
+  radio: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'radio' as const, options, validation }),
+  date: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'date' as const, options, validation }),
+  time: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'time' as const, options, validation }),
+  dateTime: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'dateTime' as const, options, validation }),
+  color: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'color' as const, options, validation }),
+  file: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'file' as const, options, validation }),
+  image: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'image' as const, options, validation }),
+  rating: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'rating' as const, options, validation }),
+  tags: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'tags' as const, options, validation }),
+  json: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'json' as const, options, validation }),
+  markdown: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'markdown' as const, options, validation }),
+  code: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'code' as const, options, validation }),
+  phone: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'phone' as const, options, validation }),
+  currency: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'currency' as const, options, validation }),
+  percentage: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'percentage' as const, options, validation }),
+  range: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'range' as const, options, validation }),
+  location: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'location' as const, options, validation }),
+  signature: (options?: FieldOptions, validation?: ValidationOptions) => ({ kind: 'signature' as const, options, validation }),
+};
+// @filename: index.ts
+// ---cut---
+import { fields } from './fields';
+
+const title = fields.text({ label: 'Title' });
+const email = fields.email({ label: 'Email' }, { message: 'Invalid email' });
+const age = fields.integer({ label: 'Age' }, { min: 0 });
+```
