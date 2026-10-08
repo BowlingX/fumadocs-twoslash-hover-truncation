@@ -1,45 +1,64 @@
-# fumadocs-twoslash-hover-truncation
+# fumadocs-twoslash 4: hover types are no longer truncated
 
-This is a Next.js application generated with
-[Create Fumadocs](https://github.com/fuma-nama/fumadocs).
+A bare `create-fumadocs-app` (Next.js + Fumadocs MDX) with `fumadocs-twoslash` set up as in the
+[Twoslash docs](https://fumadocs.dev/docs/markdown/twoslash). The only page that matters is
+[`content/docs/fields.mdx`](content/docs/fields.mdx): one code block that hovers `fields`, an object
+with 30 factory methods.
 
-Run development server:
+`fumadocs-twoslash` 4 builds hover text with `NodeBuilderFlags.NoTruncation`
+(`packages/twoslash/src/twoslasher.ts`, fuma-nama/fumadocs#3533), so every hover of `fields` renders
+its full type. 3.x used the TypeScript language service, which collapses long types
+(`... 26 more ...`). Each popup is highlighted into JSX, so the page payload grows with it.
+
+## Reproduce
 
 ```bash
-npm run dev
-# or
-pnpm dev
-# or
-yarn dev
+pnpm install
+pnpm build
+pnpm hover-report   # popup text sizes + page size of /docs/fields
 ```
 
-Open http://localhost:3000 with your browser to see the result.
+Or run `pnpm dev`, open `/docs/fields` and hover `fields`.
 
-## Explore
+To compare with 3.x, check out the `twoslash-v3` branch (only `fumadocs-twoslash` differs) and run
+the same commands.
 
-In the project, you can see:
+## Result
 
-- `lib/source.ts`: Code for content source adapter, [`loader()`](https://fumadocs.dev/docs/headless/source-api) provides the interface to access your content.
-- `lib/layout.shared.tsx`: Shared options for layouts, optional but preferred to keep.
+| `/docs/fields` (4 lines of code) | `twoslash-v3` (3.3.1) | `main` (4.0.1) |
+| -------------------------------- | --------------------- | -------------- |
+| `fields` hover text              | 627 chars             | 6,768 chars    |
+| Page HTML                        | 131 KB                | 609 KB         |
+| Page RSC payload                 | 90 KB                 | 493 KB         |
 
-| Route                     | Description                                            |
-| ------------------------- | ------------------------------------------------------ |
-| `app/(home)`              | The route group for your landing page and other pages. |
-| `app/docs`                | The documentation layout and pages.                    |
-| `app/api/search/route.ts` | The Route Handler for search.                          |
+`fields` is hovered 4 times. In a real docs site with a few dozen such hovers, the compiled MDX grew
+from 28 MB to 122 MB and the `next build` main process from 3.5 GB to 7.2 GB.
 
-### Fumadocs MDX
+<details>
+<summary>The <code>fields</code> hover with 3.3.1</summary>
 
-Collections are defined with the [Macro API](https://fumadocs.dev/docs/mdx/macro) in `lib/source.ts`.
+```ts
+const fields: {
+    text: (options?: FieldOptions, validation?: ValidationOptions) => {
+        kind: "text";
+        options: FieldOptions | undefined;
+        validation: ValidationOptions | undefined;
+    };
+    textarea: (options?: FieldOptions, validation?: ValidationOptions) => {
+        kind: "textarea";
+        options: FieldOptions | undefined;
+        validation: ValidationOptions | undefined;
+    };
+    email: (options?: FieldOptions, validation?: ValidationOptions) => {
+        ...;
+    };
+    ... 26 more ...;
+    signature: (options?: FieldOptions, validation?: ValidationOptions) => {
+        ...;
+    };
+}
+```
 
-Read the [Introduction](https://fumadocs.dev/docs/mdx) for further details.
+With 4.0.1 the same hover lists all 30 members in full.
 
-## Learn More
-
-To learn more about Next.js and Fumadocs, take a look at the following
-resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
-  features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [Fumadocs](https://fumadocs.dev) - learn about Fumadocs
+</details>

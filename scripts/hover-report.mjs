@@ -36,7 +36,7 @@ function text(node) {
   if (ref && rows.has(ref[1])) return text(rows.get(ref[1]));
   if (typeof node === 'string') return node;
   if (!Array.isArray(node)) return '';
-  if (node[0] === '$') return node[3]?.className === 'twoslash-popup-docs' ? '' : text(node[3]?.children);
+  if (node[0] === '$') return node[3]?.className?.includes('twoslash-popup-docs') ? '' : text(node[3]?.children);
   return node.map(text).join('');
 }
 
